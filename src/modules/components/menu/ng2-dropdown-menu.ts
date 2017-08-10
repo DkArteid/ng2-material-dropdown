@@ -13,7 +13,7 @@ import {
     state
 } from '@angular/core';
 
-import { ACTIONS, arrowKeysHandler } from './actions';
+import { ACTIONS, navigationKeysHandler } from './actions';
 
 import { Ng2MenuItem } from '../menu-item/ng2-menu-item';
 import { DropdownStateService } from '../../services/dropdown-state.service';
@@ -95,7 +95,7 @@ export class Ng2DropdownMenu {
     private position: ClientRect;
 
     private listeners = {
-        arrowHandler: undefined,
+        navigationHandler: undefined,
         handleKeypress: undefined
     };
 
@@ -113,7 +113,7 @@ export class Ng2DropdownMenu {
 
         // setting handlers
         this.listeners.handleKeypress = this.renderer.listen(document.body, 'keydown', this.handleKeypress.bind(this));
-        this.listeners.arrowHandler = this.renderer.listen(window, 'keydown', arrowKeysHandler);
+        this.listeners.navigationHandler = this.renderer.listen(window, 'keydown', navigationKeysHandler);
     }
 
     /**
@@ -127,7 +127,7 @@ export class Ng2DropdownMenu {
         this.state.dropdownState.unselect();
 
         // call function to unlisten
-        this.listeners.arrowHandler ? this.listeners.arrowHandler() : undefined;
+        this.listeners.navigationHandler ? this.listeners.navigationHandler() : undefined;
         this.listeners.handleKeypress ? this.listeners.handleKeypress() : undefined;
     }
 
@@ -150,6 +150,17 @@ export class Ng2DropdownMenu {
         const key = $event.keyCode;
         const items = this.items.toArray();
         const index = items.indexOf(this.state.dropdownState.selectedItem);
+		
+		// If key press is ESC hides the menu.
+		if(key == 27){
+			// If it's not appended to body, sets focus to the parent element of the ng2-material-dropdown
+			if(!this.appendToBody){
+				var parentElement = this.element.nativeElement.parentElement.parentElement.parentElement.parentElement;
+				parentElement.focus();
+			}
+			this.hide();
+			return;
+		}
 
         if (!ACTIONS.hasOwnProperty(key)) {
             return;

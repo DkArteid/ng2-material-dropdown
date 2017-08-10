@@ -2,7 +2,7 @@ import { Ng2MenuItem } from '../menu-item/ng2-menu-item';
 import { Ng2DropdownState } from '../../services/ng2-dropdown-state';
 
 const KEYS = {
-    BACKSPACE: 9,
+    TAB: 9,
     PREV: 38,
     NEXT: 40,
     ENTER: 13
@@ -33,12 +33,12 @@ const onSwitchPrev = (index: number, items: Ng2MenuItem[], state: Ng2DropdownSta
 };
 
 /**
- * @name onBackspace
+ * @name onTab
  * @param index
  * @param items
  * @param state
  */
-const onBackspace = (index: number, items: Ng2MenuItem[], state: Ng2DropdownState) => {
+const onTab = (index: number, items: Ng2MenuItem[], state: Ng2DropdownState) => {
     if (index < items.length - 1) {
         state.select(items[index + 1], true);
     } else {
@@ -57,14 +57,14 @@ const onItemClicked = (index: number, items: Ng2MenuItem[], state: Ng2DropdownSt
 };
 
 export const ACTIONS = {
-    [KEYS.BACKSPACE]: onBackspace,
+    [KEYS.TAB]: onTab,
     [KEYS.PREV]: onSwitchPrev,
     [KEYS.NEXT]: onSwitchNext,
     [KEYS.ENTER]: onItemClicked
 };
 
-export function arrowKeysHandler(event): void {
-    if ([38, 40].indexOf(event.keyCode) > -1) {
+export function navigationKeysHandler(event): void {
+    if ([9, 38, 40].indexOf(event.keyCode) > -1) {
         event.preventDefault();
     }
 }
